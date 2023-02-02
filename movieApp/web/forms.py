@@ -18,7 +18,3 @@ class UserUpdateForm(forms.ModelForm):
         model = User
         fields = ['username', 'email']
 
-#El formulario para poder actualizar la imagen de perfil o avatar
-class ProfileUpdateForm(forms.ModelForm):
-    class Meta:
-        model = Profile

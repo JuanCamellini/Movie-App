@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib import messages
-from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
+from .forms import UserRegisterForm, UserUpdateForm
+from .models import Movie
 
 from api_key import api_key
 
@@ -35,33 +36,44 @@ import requests
 
 def index(request):
     if request.method == 'POST':
-        movie = request.POST['movie'].lower()
-        if " " in movie:
-            movie.replace(" ","%20")
-        url = f"https://imdb-api.com/en/API/SearchMovie/{api_key}/{movie}"
-        response = requests.get(url)
-        dataset = response.json()
-        print(dataset)
-        try:
-            context = {
-                ### 
-                "id": dataset['results'][0]['id'],
-                "image": dataset['results'][0]['image'],
-                "title": dataset['results'][0]['title'],
-                "duration": dataset['results'][0]['runtimeStr'],
-                "genres": dataset['results'][0]['genres'],
-                "rating": dataset['results'][0]['imDbRating'],
-                "ratingvotes": dataset['result'][0]['imDbRatingVotes'],
-                "plot": dataset['results'][0]['plot'],
-                "stars": dataset['results'][0]['stars'],
-                "director":dataset['results'][0]['starList'][0]['name'],
-            }
-        except:
-            context = {
-                "error": "Movie not found"
-            }
+        if 'movie' in request.POST:
+            movie = request.POST['movie'].lower()
+            if " " in movie:
+                movie.replace(" ","%20")
+            url = f"https://imdb-api.com/en/API/SearchMovie/{api_key}/{movie}"
+            response = requests.get(url)
+            dataset = response.json()
+            print(dataset)
+            try:
+                context = {
+                    ### 
+                    "id": dataset['results'][0]['id'],
+                    "image": dataset['results'][0]['image'],
+                    "title": dataset['results'][0]['title'],
+                    "duration": dataset['results'][0]['runtimeStr'],
+                    "genres": dataset['results'][0]['genres'],
+                    "rating": dataset['results'][0]['imDbRating'],
+                    "ratingvotes": dataset['result'][0]['imDbRatingVotes'],
+                    "plot": dataset['results'][0]['plot'],
+                    "stars": dataset['results'][0]['stars'],
+                    "director":dataset['results'][0]['starList'][0]['name'],
+                }
+            except:
+                context = {
+                    "error": "Movie not found"
+                }
+
+        elif 'username' in request.POST:
+            pass
+        
         return render(request, 'webApp/moviesingle.html', context)
     return render(request, 'webApp/index.html')
+
+class ResultsListView(ListView):
+    model = Movie
+    template_name = 'blog/index.html'
+    context_object_name = 'posts'
+
 
 def results(request):
     if request.method == 'POST':
@@ -113,3 +125,5 @@ def profile(request):
     context = {'update_form':update_form}
     
     return render(request, 'webApp/userprofile.html', context)
+
+
