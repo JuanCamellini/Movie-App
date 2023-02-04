@@ -1,7 +1,7 @@
 {% extends 'webapp/base.html' %}
 
 {% block title %}
-{{ title }}
+{{ Movies.title }}
 {% endblock %}
 
 {% block content %}
@@ -39,19 +39,18 @@
 					<a href="movielist.html" class="list"><i class="ion-ios-list-outline active"></i></a>
 					<a  href="moviegrid.html" class="grid"><i class="ion-grid"></i></a>
 				</div>
-				{% for movies in context %}
+				{% for movie in Movies %}
 
-				{% if rank_1 and title_1 and year_1 %}
+				
 				<div class="movie-item-style-2">
-					<img src="{{image_1}}}" alt="">
+					<img src="{{movie.image}}" alt="">
 					<div class="mv-item-infor">
-						<h6>{{title_1}}</h6>
-						<h6><a href="moviesingle.html">{{ title }} <span>({{ year }})</span></a></h6>
-						<p class="rate"><i class="ion-android-star"></i><span>{{imDbRating}}</span> /10</p>
-						<p>Crew: <a href="#">{{crew}}</a></p>
+						<h6>{{movie.rank}</h6>
+						<h6><a href="moviesingle.html">{{ movie.title }} <span>({{ movie.year }})</span></a></h6>
+						<p class="rate"><i class="ion-android-star"></i><span></span> /10</p>
+						<p>Crew: <a href="#">{{movie.crew}}</a></p>
 					</div>
 				
-				{% endif %}
 				{% endfor %}
 				<div class="topbar-filter">
 					<label>Movies per page:</label>
