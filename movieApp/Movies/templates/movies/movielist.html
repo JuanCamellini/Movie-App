@@ -29,8 +29,6 @@
 					<p>Found <span>250</span> in total</p>
 					<label>Sort by:</label>
 					<select>
-						<option value="popularity">Popularity Descending</option>
-						<option value="popularity">Popularity Ascending</option>
 						<option value="rating">Rating Descending</option>
 						<option value="rating">Rating Ascending</option>
 						<option value="date">Release date Descending</option>
@@ -39,30 +37,40 @@
 					<a href="movielist.html" class="list"><i class="ion-ios-list-outline active"></i></a>
 					<a  href="moviegrid.html" class="grid"><i class="ion-grid"></i></a>
 				</div>
-				{% for movie in Movies %}
+				{% for movie in movies %}
 
 				
 				<div class="movie-item-style-2">
-					<img src="{{movie.image}}" alt="">
+					<img src="{{movie.image}}" style="height: 130px; width: 110px" alt=""> 
 					<div class="mv-item-infor">
-						<h6>{{movie.rank}</h6>
+						<h6>{{movie.rank}}</h6>
 						<h6><a href="moviesingle.html">{{ movie.title }} <span>({{ movie.year }})</span></a></h6>
 						<p class="rate"><i class="ion-android-star"></i><span></span> /10</p>
 						<p>Crew: <a href="#">{{movie.crew}}</a></p>
 					</div>
-				
+				</div>
+
 				{% endfor %}
 				<div class="topbar-filter">
 					<label>Movies per page:</label>
 					<select>
-						<option value="range">5 Movies</option>
-						<option value="saab">10 Movies</option>
+						<option value="range">50 Movies</option>
 					</select>
 					<div class="pagination2">
-						<span>Page 1 of 2:</span>
-						<a class="active" href="#">1</a>
-						<a href="#">2</a>
-						<a href="#"><i class="ion-arrow-right-b"></i></a>
+						{% if page_obj.has_previous %}
+						<a class="" style="float: left;" href="?page=1">&laquo; first</a>
+						<a href="?page= {{ page_obj.previous_page_number }}">previous</a>
+						{% endif %}
+						
+						<span class="">
+							Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+						</span>
+
+						{% if page_obj.has_next %}
+						<a href="?page= {{page_obj.next_page_number }}">next</a>
+						<a href="?page= {{page_obj.paginator.num_pages }}">last &raquo;</a>
+						{% endif %}
+
 					</div>
 				</div>
 			</div>

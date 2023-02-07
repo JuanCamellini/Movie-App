@@ -64,7 +64,12 @@ def index(request):
                 }
 
         elif 'username' in request.POST:
-            pass
+            form = UserRegisterForm(request.POST)
+            if form.is_valid():
+                form.save()
+                username = form.cleaned_data.get('username')
+                messages.success(request, "Account created for " + username)
+                return redirect('login')
         
         return render(request, 'webApp/moviesingle.html', context)
     return render(request, 'webApp/index.html')
@@ -73,6 +78,7 @@ class ResultsListView(ListView):
     model = Movie
     template_name = 'blog/index.html'
     context_object_name = 'posts'
+    
 
 
 def results(request):
@@ -98,7 +104,15 @@ def results(request):
                 "plot": dataset['results'][0]['plot'],
                 "stars": dataset['results'][0]['stars'],
                 "director":dataset['results'][0]['starList'][0]['name'],
+                "api_key": api_key,
+                
             }
+
+            url = f"https://imdb-api.com/en/API/Trailer/{api_key}/{context['id']}"
+            response = requests.get(url)
+            dataset = response.json()
+            context["trailer"] = dataset["link"]
+
         except:
             context = {
                 "error": "Movie not found"
@@ -127,3 +141,5 @@ def profile(request):
     return render(request, 'webApp/userprofile.html', context)
 
 
+def favoritelist(request):
+    return render(request, 'webApp/userfavoritelist.html')
