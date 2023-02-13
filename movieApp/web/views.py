@@ -2,8 +2,10 @@ from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib import messages
+from django.db import transaction
+
 from .forms import UserRegisterForm, UserUpdateForm
-from .models import Movie
+from Movies.models import Movie
 
 from api_key import api_key
 
@@ -62,6 +64,7 @@ def index(request):
                 context = {
                     "error": "Movie not found"
                 }
+            return render(request, 'webApp/moviesingle.html', context)
 
         elif 'username' in request.POST:
             form = UserRegisterForm(request.POST)
@@ -70,15 +73,15 @@ def index(request):
                 username = form.cleaned_data.get('username')
                 messages.success(request, "Account created for " + username)
                 return redirect('login')
-        
-        return render(request, 'webApp/moviesingle.html', context)
-    return render(request, 'webApp/index.html')
+        return render(request, "users/userprofile.html")
+                
+    else: 
+        form = UserRegisterForm()
 
-class ResultsListView(ListView):
-    model = Movie
-    template_name = 'blog/index.html'
-    context_object_name = 'posts'
-    
+        
+    return render(request, 'webApp/index.html', {'form': form})
+
+
 
 
 def results(request):
@@ -89,8 +92,6 @@ def results(request):
         url = f"https://imdb-api.com/en/API/AdvancedSearch/{api_key}/?title={movie}"
         response = requests.get(url)
         dataset = response.json()
-        print(dataset)
-        print("##################")
         try:        
             context = {
                 ### 
@@ -107,7 +108,7 @@ def results(request):
                 "api_key": api_key,
                 
             }
-
+            print(context)
             url = f"https://imdb-api.com/en/API/Trailer/{api_key}/{context['id']}"
             response = requests.get(url)
             dataset = response.json()
@@ -118,28 +119,23 @@ def results(request):
                 "error": "Movie not found"
                 }
 
-            print(context)
+        with transaction.atomic():
+            if not Movie.objects.filter(title=context['title']).exists():
+                year = context['year'].replace("(", "").replace(")","")
+                Movie.objects.create(
+                    title=context['title'],
+                    year=year,
+                    #genre=context['genres'],
+                    rating=context['rating'],
+                    crew=context['stars'],
+                    image=context['image'],
+                )
+                print("db succesfuly")
+                print("=====================================")
+                print(context['title'])
+
         return render(request, 'webApp/moviesingle.html', context)
     return redirect('home')
 
-""" @login_required(login_url='login')
-@allowed_users(allowed_roles=['customer']) """
-def profile(request):
-    #movies = request.user.customer.movies_set.all()
-    #context = {'movies':movies}
-    if request.method == 'POST':
-        update_form = UserUpdateForm(request.POST, instance=request.user)
-        if update_form.is_valid():
-            update_form.save()
-            messages.success(request, "Your account has been updated")
-            return redirect('profile')
-    else:
-        update_form = UserUpdateForm(instance=request.user)
-
-    context = {'update_form':update_form}
-    
-    return render(request, 'webApp/userprofile.html', context)
 
 
-def favoritelist(request):
-    return render(request, 'webApp/userfavoritelist.html')

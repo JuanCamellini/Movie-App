@@ -1,0 +1,62 @@
+{% extends 'webApp/base.html' %}
+{% load static %}
+{% block title %}REGISTER{% endblock %}
+
+{% block content %}
+<div class="hero common-hero">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="hero-ct">
+					<h1> REGISTER</h1>
+					<ul class="breadcumb">
+						<li class="active"><a href="#">Home</a></li>
+						<li> <span class="ion-ios-arrow-right"></span> register</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="page-single">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-9 col-sm-12 col-xs-12">
+				<div class="blog-detail-ct">
+                    <form method="POST" action="#">
+                        {% csrf_token %}
+                        <fieldset class="form"> <legend class="form">Log In</legend>
+                            {{ form }}
+                        </fieldset>
+                        <div class="form">
+                            <button class="btn btn-outline-info" type="submit">Login</button>
+                            <small class="text-muted ml-2">
+                                <a href="#">Forgot Password?</a>
+                            </small>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>  
+    </div>
+</div>
+
+<!-- blog list section--><!-- 
+<div class="login-content">
+    <h3>sign up</h3>
+    <form method="POST" action="#">
+        {% csrf_token %}
+        <fieldset class="form-group"> <legend class="border-bottom mb-4">Log In</legend>
+            {{ form }}
+        </fieldset>
+        <div class="form-group">
+            <button class="btn btn-outline-info" type="submit">Login</button>
+            <small class="text-muted ml-2">
+                <a href="#">Forgot Password?</a>
+            </small>
+        </div>
+    </form>
+</div> -->
+
+            {% endblock %}

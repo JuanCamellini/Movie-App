@@ -72,21 +72,19 @@
     <div class="login-content">
         <a href="#" class="close">x</a>
         <h3>sign up</h3>
-        <form method="POST" action="#">{% csrf_token %}
-            <div class="row">
-                 <label for="username-2">
-                    Username:
-                </label>
-				{{ form }}
+        <form method="POST" action="#">
+			{% csrf_token %}
+            <fieldset class="form-group"> <legend class="border-bottom mb-4">Log In</legend>
+                {{ form }}
+            </fieldset>
+            <div class="form-group">
+                <button class="btn btn-outline-info" type="submit">Login</button>
+                <small class="text-muted ml-2">
+                    <a href="#">Forgot Password?</a>
+                </small>
             </div>
-           
-            
-            </div>
-           <div class="row">
-             <button type="submit">sign up</button>
-           </div>
         </form>
-    </div>
+	</div>
 </div>
 <!--end of signup form popup-->
 
