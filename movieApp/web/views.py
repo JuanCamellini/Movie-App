@@ -4,7 +4,7 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 from django.db import transaction
 
-from .forms import UserRegisterForm, UserUpdateForm
+from users.forms import UserRegisterForm, UserUpdateForm
 from Movies.models import Movie
 
 from api_key import api_key
@@ -73,7 +73,7 @@ def index(request):
                 username = form.cleaned_data.get('username')
                 messages.success(request, "Account created for " + username)
                 return redirect('login')
-        return render(request, "users/userprofile.html")
+        return render(request, "users/profile.html")
                 
     else: 
         form = UserRegisterForm()

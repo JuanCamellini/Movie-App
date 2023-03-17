@@ -63,7 +63,7 @@
 						{% endif %}
 						
 						<span class="">
-							Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+							Page {% if page_obj.number > 5 %}  {% else %} {{ page_obj.number }} of {{ num_pages }} {% endif %}
 						</span>
 
 						{% if page_obj.has_next %}
@@ -78,11 +78,12 @@
 				<div class="sidebar">
 					<div class="searh-form">
 						<h4 class="sb-title">Search for movie</h4>
-						<form class="form-style-1" action="#">
+						<form class="form-style-1" action="{% url 'topmovies' %}" method="GET">
 							<div class="row">
 								<div class="col-md-12 form-it">
 									<label>Movie name</label>
-									<input type="text" placeholder="Enter keywords">
+									{{ form.as_p }}
+									<input type="form" placeholder="Enter keywords">
 								</div>
 								<div class="col-md-12 form-it">
 									<label>Genres & Subgenres</label>
@@ -90,11 +91,6 @@
 										<select
 											name="skills" multiple="" class="ui fluid dropdown">
 											<option value="">Enter to filter genres</option>
-											<option value="Action1">Action 1</option>
-					                        <option value="Action2">Action 2</option>
-					                        <option value="Action3">Action 3</option>
-					                        <option value="Action4">Action 4</option>
-					                        <option value="Action5">Action 5</option>
 										</select>
 									</div>
 									

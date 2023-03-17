@@ -40,7 +40,10 @@ INSTALLED_APPS = [
     'web',
     'Movies',
     'rest_framework',
+    'crispy_forms',
     'django_filters',
+    'users',
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [
@@ -124,12 +127,30 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
         os.path.join(BASE_DIR, 'static'),
    ]
+#STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-MEDIA_URL = '/media/'
+# Media Files
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
 
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CRISPY_TEMPLATE_PACK = "bootstrap4"
+
+# Authentication Settings
+
+LOGIN_REDIRECT_URL = 'home'
+LOGIN_URL = 'login'
+
+#SMTP CONFIGURATION
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smt.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'juantomascamellini@gmail.com'
+EMAIL_HOST_PASSWORD = 'teamocami10'

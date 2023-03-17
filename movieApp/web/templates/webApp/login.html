@@ -1,15 +1,103 @@
 {% extends 'webApp/base.html' %}
 {% load static %}
-{% block title %}
-<h1> Login</h1>
-{% endblock %}
+{% load widget_tweaks %}
+{% block title %}LOGIN{% endblock %}
 
 {% block content %}
-<div class="content-section">
-    <form method="POST">
+<div class="page-single-2">
+	<div class="container">
+		<div class="row ipad-width">
+			<div class="left-content">
+				<a href=""><img class="md-logo"  alt=""></a>
+				<h1>Login</h1>
+				<p>We are working hard to get back to you in</p>
+				<div class="row">
+					<div class="col-md-6 col-sm-12 ">
+						<h3>Choose us</h3>
+						<br>
+						{% if form.errors %}
+						<small class="text-muted ml-2">
+							<a href="{% url 'password_reset' %}" style="color:red">Password or Username Invalid</a>
+						</small>
+						{% endif %}
+						<form class="form-group-sm" style="display:inline-block"  method="POST" >
+							{% csrf_token %}
+							{{ form.username.label_tag}}
+							{{ form.username|add_class:'email' }}							
+							{{ form.password.label_tag}}
+							{{ form.password|add_class:'email' }}
+								<!-- <input class="email" type="text" placeholder="Enter your email">
+								<input class="email" type="text" placeholder="password">
+								<input class="email" type="text" placeholder="confirm password"> -->
+								<input class="redbtn" style="margin-left: 0px;" type="submit" placeholder="Send" >
+						</form>
+						<small class="text-muted ml-2">
+							<a href="{% url 'password_reset' %}">Forgot Password?</a>
+						</small><br>
+						<small class="text-muted ml-2">
+							<a href="{% url 'register' %}">No account? Sign Up Free</a>
+						</small>
+					</div>
+					<div class="col-md-6 col-sm-12 col-xs-12">
+						<img class="cm-img" src="images/uploads/cm-img.png" alt="">
+					</div>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+</div>
+<script src="js/jquery.js"></script>
+<script src="js/plugins.js"></script>
+<script src="js/plugins2.js"></script>
+<script src="js/custom.js"></script>
+<!-- 
+
+<div class="hero common-hero">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="hero-ct">
+					<h1> REGISTER</h1>
+					<ul class="breadcumb">
+						<li class="active"><a href="#">Home</a></li>
+						<li> <span class="ion-ios-arrow-right"></span> register</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="page-single">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-9 col-sm-12 col-xs-12">
+				<div class="blog-detail-ct">
+                    <form method="POST" action="#">
+                        {% csrf_token %}
+                        <fieldset class="form"> <legend class="form">Log In</legend>
+                            {{ form }}
+                        </fieldset>
+                        <div class="form">
+                            <button class="btn btn-outline-info" type="submit">Login</button>
+                            <small class="text-muted ml-2">
+                                <a href="#">Forgot Password?</a>
+                            </small>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>  
+    </div>
+</div> -->
+
+<!-- blog list section--><!-- 
+<div class="login-content">
+    <h3>sign up</h3>
+    <form method="POST" action="#">
         {% csrf_token %}
-        <fieldset class="form-group">
-            <legend class="border-bottom mb-4">Log In</legend>
+        <fieldset class="form-group"> <legend class="border-bottom mb-4">Log In</legend>
             {{ form }}
         </fieldset>
         <div class="form-group">
@@ -19,11 +107,6 @@
             </small>
         </div>
     </form>
-    <div class="border-top pt-3">
-        <small class="text-muted">
-            Nedd An Account? <a class="ml-2" href="{% url 'register' %}">Sign Up Now</a>
-        </small>
-    </div>
-</div>
+</div> -->
 
- {% endblock %}
+            {% endblock %}

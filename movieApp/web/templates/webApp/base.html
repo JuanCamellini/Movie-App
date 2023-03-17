@@ -35,59 +35,6 @@
 <!--preloading-->
 <!--end of preloading-->
 <!--login form popup-->
-<div class="login-wrapper" id="login-content">
-    <div class="login-content">
-        <a href="#" class="close">x</a>
-        <h3>Login</h3>
-        <form method="POST" action="#">
-			{% csrf_token %}
-        	<fieldset class="form-group">
-                <legend class="border-bottom mb-4">Log In</legend>
-                {{ form }}
-            </fieldset>
-            <div class="row">
-            	<div class="remember">
-					<div>
-						<input type="checkbox" name="remember" value="Remember me"><span>Remember me</span>
-					</div>
-            		<a href="#">Forget password ?</a>
-            	</div>
-            </div>
-           <div class="row">
-           	 <button type="submit">Login</button>
-           </div>
-        </form>
-        <div class="row">
-        	<p>Or via social</p>
-            <div class="social-btn-2">
-            	<a class="fb" href="#"><i class="ion-social-facebook"></i>Facebook</a>
-            	<a class="tw" href="#"><i class="ion-social-twitter"></i>twitter</a>
-            </div>
-        </div>
-    </div>
-</div>
-<!--end of login form popup-->
-<!--signup form popup-->
-<div class="login-wrapper"  id="signup-content">
-    <div class="login-content">
-        <a href="#" class="close">x</a>
-        <h3>sign up</h3>
-        <form method="POST" action="#">
-			{% csrf_token %}
-            <fieldset class="form-group"> <legend class="border-bottom mb-4">Log In</legend>
-                {{ form }}
-            </fieldset>
-            <div class="form-group">
-                <button class="btn btn-outline-info" type="submit">Login</button>
-                <small class="text-muted ml-2">
-                    <a href="#">Forgot Password?</a>
-                </small>
-            </div>
-        </form>
-	</div>
-</div>
-<!--end of signup form popup-->
-
 <!-- BEGIN | Header -->
 <header class="ht-header">
 	<div class="container">
@@ -178,8 +125,13 @@
 							</ul>
 						</li>                
 						<li><a href="#">Help</a></li>
-						<li class="loginLink"><a href="#">LOG In</a></li>
-						<li class="btn signupLink"><a href="#">sign up</a></li>
+						{% if user.is_authenticated %}
+						<li class=""><a href="{% url 'logout' %}">LOG OUT</a></li>
+						<li class="btn"><a href="{% url 'profile' %}">{{ user.username }}</a></li>						
+						{% else %}
+						<li class=""><a href="{% url 'login' %}">LOG In</a></li>
+						<li class="btn"><a href="{% url 'register' %}">sign up</a></li>
+						{% endif %}
 					</ul>
 				</div>
 			<!-- /.navbar-collapse -->
