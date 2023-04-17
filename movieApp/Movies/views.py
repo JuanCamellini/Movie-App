@@ -14,14 +14,14 @@ import requests
 import crispy_forms
 
 from api_key import api_key
-from .models import Movie
-from .filters import MovieFilter
-from .forms import MovieFilterForm
+from .models import Top250Movies
+from .filters import MoviesFilter, Top250MoviesFilter
+from .forms import MoviesFilterForm
 
 # Create your views here.
 
 class MovieListView(ListView):
-    model = Movie
+    model = Top250Movies
     template_name = 'Movies/movielist.html'
     context_object_name = 'movies'
     paginate_by = 50 
@@ -54,6 +54,21 @@ class MovieListView(ListView):
                 "stars": dataset['results'][0]['stars'],
                 "director":dataset['results'][0]['starList'][0]['name'],
             }
+            #add the genres to the column genre in top250movies db with transaction.atomic
+            with transaction.atomic():
+                for genre in context['genres']:
+                    Top250Movies.objects.create(
+                        id = context['id'],
+                        image = context['image'],
+                        title = context['title'],
+                        year = context['year'],
+                        duration = context['duration'],
+                        genre = genre,
+                        rating = context['rating'],
+                        plot = context['plot'],
+                        stars = context['stars'],
+                        director = context['director'],
+                    )
         except:
             context = { 
                 "error": "Movie not found"
@@ -67,22 +82,16 @@ class MovieListView(ListView):
         p = Paginator(Movie.objects.filter(rank__isnull=False), 50)
         page = self.request.GET.get('page')
         context['movies'] = p.get_page(page) """
-        print(Movie.objects.filter(rank__isnull=False))
-        """ 
-        num_movies = len(movies)
-        num_pages = (num_movies + 49) // 50  # redondea hacia arriba dividiendo por 50 y sumando 1
-        p = Paginator(movies, 50)
-        page = self.request.GET.get('page')
-        context['movies'] = p.get_page(page)
-        context['num_pages'] = 5 """
-        #falta fixear q aparezcan 5 pages en vez de 6 
+        
+        context['object_list'] = Top250Movies.objects.filter(rank__isnull=False)
+        
         return context
 
     def get_queryset(self):
         queryset = super().get_queryset()
         if self.request.GET.get('title'):
             queryset = queryset.filter(title=self.request.GET.get('title'))
-        return MovieFilter(self.request.GET, queryset=queryset).qs
+        return Top250MoviesFilter(self.request.GET, queryset=queryset).qs
 
 
 def top250movies(request):
@@ -92,12 +101,12 @@ def top250movies(request):
         dataset = response.json()
         try:
             context = {
-                "movies": Movie.objects.all(),
+                "movies": Top250Movies.objects.all(),
                 }
             """
                 response_json = dataset["items"]
                 # filter with the keys that wants to add to the db
-                keys_to_add = ["rank", "title", "year", "image", "crew"]
+                keys_to_add = ["rank", "title", "year", "image", "crew", ]
                 
                 # function for delete duplicate rows
                 for row in Movie.objects.all().reverse():
@@ -142,15 +151,15 @@ def top250movies(request):
                     print("db updated")
                     print("========================================") """
 
-            """ #agregar la lista de generos a los objectos de la db
+            #agregar la lista de generos a los objectos de la db
             with transaction.atomic():
-                for movie in Movie.objects.all():
+                for movie in Top250Movies.objects.all():
                     for item in dataset['items']:
                         if movie.title == item['title']:
                             movie.genre = item['genres']
                             movie.save()
                             print("db updated")
-                            print("========================================") """
+                            print("========================================")
             
         except:
             context = {

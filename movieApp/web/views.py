@@ -1,11 +1,15 @@
-from django.shortcuts import render, redirect
+# Django
+from django.shortcuts import get_object_or_404, render, redirect
+from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.db import transaction
+from django.core.exceptions import ValidationError
 
+#Utilities
 from users.forms import UserRegisterForm, UserUpdateForm
-from Movies.models import Movie
+from Movies.models import Movies, Top250Movies, MoviesLiked
 
 from api_key import api_key
 
@@ -42,10 +46,11 @@ def index(request):
             movie = request.POST['movie'].lower()
             if " " in movie:
                 movie.replace(" ","%20")
-            url = f"https://imdb-api.com/en/API/SearchMovie/{api_key}/{movie}"
+            url = f"https://imdb-api.com/en/API/AdvancedSearch/{api_key}/{movie}"
             response = requests.get(url)
             dataset = response.json()
             print(dataset)
+            
             try:
                 context = {
                     ### 
@@ -66,14 +71,7 @@ def index(request):
                 }
             return render(request, 'webApp/moviesingle.html', context)
 
-        elif 'username' in request.POST:
-            form = UserRegisterForm(request.POST)
-            if form.is_valid():
-                form.save()
-                username = form.cleaned_data.get('username')
-                messages.success(request, "Account created for " + username)
-                return redirect('login')
-        return render(request, "users/profile.html")
+        
                 
     else: 
         form = UserRegisterForm()
@@ -81,15 +79,114 @@ def index(request):
         
     return render(request, 'webApp/index.html', {'form': form})
 
+#Functions for the results view
+def clean_movie_title(title):
+    """Clean and validate the movie title."""
+    return title.lower().replace(" ", "%20")
+
+def fetch_movie_data(movie_title):
+    """Fetch data about a movie from the IMDb API."""
+    url = f"https://imdb-api.com/API/AdvancedSearch/{api_key}/?title={movie_title}"
+    response = requests.get(url)
+    response.raise_for_status()
+    return response.json()
+
+#create a fucntion that fetch_movie_trailer
+def fetch_movie_trailer(movie_id):
+    """Fetch additional details about a movie from the IMDb API."""
+    url = f"https://imdb-api.com/en/API/Trailer/{api_key}/{movie_id}"
+    response = requests.get(url)
+    response.raise_for_status()
+    return response.json()
+
+def fetch_movie_details(movie_id):
+    """Fetch additional details about a movie from the IMDb API."""
+    url = f"https://imdb-api.com/en/API/Title/{api_key}/{movie_id}"
+    response = requests.get(url)
+    response.raise_for_status()
+    return response.json()
+
+def validate_movie_data(data):
+    """Validate the data returned from the IMDb API."""
+    for key, value in data.items():
+        try:
+            Movies._meta.get_field(key).run_validators(value)
+        except ValidationError:
+            return False
+    return True
 
 
 
 def results(request):
     if request.method == 'POST':
+        movie_title = clean_movie_title(request.POST['movie'])
+        try:
+            data = fetch_movie_data(movie_title)['results'][0]
+        except (requests.RequestException, IndexError):
+            return render(request, 'webApp/404.html')
+        context = {
+            "movie_id": data['id'],
+            "image": data['image'],
+            "title": data['title'],
+            "year": data['description'].replace("(", "").replace(")",""),
+            "duration": data['runtimeStr'],
+            "genre": data['genres'],
+            "rating": data['imDbRating'],
+            "plot": data['plot'],
+            "crew": data['stars'],
+            "director": data['starList'][0]['name'],
+        }
+        try:
+            details = fetch_movie_details(context['movie_id'])
+            context["releaseDate"] = details["releaseDate"]
+            context["awards"] = details["awards"]
+            context["writers"] = details["writers"]
+            context["keywordList"] = details["keywordList"]
+
+            details = fetch_movie_trailer(context['movie_id'])
+            context["trailer"] = details["link"]
+
+        except requests.RequestException:
+            pass
+        context["rating"] = float(context["rating"])                 
+        keys_to_add = ["movie_id", "image", "title", "year", "duration", "genre", "rating", "plot", "crew", "director"]
+        context_db = {key: value for key, value in context.items() if key in keys_to_add}
+        print(context_db)
+        if validate_movie_data(context_db):
+            movie_instance, created = Movies.objects.get_or_create(
+                title=context['title'],  
+                movie_id=context['movie_id'],
+                image=context['image'],
+                year=context['year'],
+                duration=context['duration'],
+                genre=context['genre'],
+                rating=context['rating'],
+                plot=context['plot'],
+                crew=context['crew'],
+                director=context['director']
+                    )
+            if created:
+                movie_instance.save()
+            print("=========================================")
+            print(movie_instance)
+            return render(request, 'webapp/moviesingle.html', context)
+        
+        #y que te redirija a la pagina de moviesingle.html
+
+
+
+        else:
+            return render(request, 'webapp/404.html')
+    else:
+        return redirect('home')
+    
+#old view results
+""" def results(request):
+    if request.method == 'POST':
         movie = request.POST['movie'].lower()
         if " " in movie:
             movie.replace(" ","%20")
-        url = f"https://imdb-api.com/en/API/AdvancedSearch/{api_key}/?title={movie}"
+        url = f"https://imdb-api.com/API/AdvancedSearch/{api_key}/?title={movie}"
         response = requests.get(url)
         dataset = response.json()
         try:        
@@ -108,34 +205,49 @@ def results(request):
                 "api_key": api_key,
                 
             }
-            print(context)
             url = f"https://imdb-api.com/en/API/Trailer/{api_key}/{context['id']}"
             response = requests.get(url)
             dataset = response.json()
             context["trailer"] = dataset["link"]
+            url = f"https://imdb-api.com/en/API/Title/{api_key}/{context['id']}"
+            response = requests.get(url)
+            dataset = response.json()
+            context["releaseDate"] = dataset["releaseDate"]
+            context["awards"] = dataset["awards"]
+            context["writers"] = dataset["writers"]
+            context["keywordList"] = dataset["keywordList"]
+            #create context for images 
+            print(context['title'])
+            
+            for key, value in context.items():
+                try:
+                    # If a field fails validation, an exception is thrown.
+                    Movies._meta.get_field(key).run_validators(value)
+                except ValidationError:
+                    #  If an exception is thrown, it returns an error response to the user 
+                    return "error"
+
+            movie_instance, created = Movies.objects.get_or_create(id=context['id'], defaults=context)
+
+            if not created:
+                for key, value in context.items():
+                    setattr(movie_instance, key, value)
+                movie_instance.save()
+
+            # Devolver una respuesta al usuario
+            return HttpResponse("Datos guardados correctamente")
+
+            except (KeyError, IndexError):
+            # Si se produce una excepción, devuelve una respuesta de error al usuario
+            return HttpResponseBadRequest("No se pudo obtener los datos de la película")
 
         except:
             context = {
                 "error": "Movie not found"
                 }
-
-        with transaction.atomic():
-            if not Movie.objects.filter(title=context['title']).exists():
-                year = context['year'].replace("(", "").replace(")","")
-                Movie.objects.create(
-                    title=context['title'],
-                    year=year,
-                    #genre=context['genres'],
-                    rating=context['rating'],
-                    crew=context['stars'],
-                    image=context['image'],
-                )
-                print("db succesfuly")
-                print("=====================================")
-                print(context['title'])
+        
 
         return render(request, 'webApp/moviesingle.html', context)
-    return redirect('home')
-
+    return redirect('home')"""
 
 

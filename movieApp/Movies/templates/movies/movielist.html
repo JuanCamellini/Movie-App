@@ -63,7 +63,7 @@
 						{% endif %}
 						
 						<span class="">
-							Page {% if page_obj.number > 5 %}  {% else %} {{ page_obj.number }} of {{ num_pages }} {% endif %}
+							Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }} 
 						</span>
 
 						{% if page_obj.has_next %}

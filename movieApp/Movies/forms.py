@@ -1,4 +1,4 @@
 from django import forms
 
-class MovieFilterForm(forms.Form):
+class MoviesFilterForm(forms.Form):
     name = forms.CharField()
