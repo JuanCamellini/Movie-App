@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'web',
     'Movies',
+    'Series',
     'rest_framework',
     'crispy_forms',
     'django_filters',

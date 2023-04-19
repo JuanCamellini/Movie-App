@@ -1,20 +1,20 @@
 import django_filters
 
-from .models import Movies, Top250Movies
+from .models import Series, Top250Series
 
-class MoviesFilter(django_filters.FilterSet):
+class SeriesFilter(django_filters.FilterSet):
 
     class Meta:
-        model = Movies
+        model = Series
         fields = {
             'title':['icontains'],
             'year':['lt', 'gt'],
             }
 
-class Top250MoviesFilter(django_filters.FilterSet):
+class Top250SeriesFilter(django_filters.FilterSet):
     
         class Meta:
-            model = Top250Movies
+            model = Top250Series
             fields = {
                 'title':['icontains'],
                 'year':['lt', 'gt'],

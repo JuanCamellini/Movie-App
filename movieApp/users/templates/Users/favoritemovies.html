@@ -56,18 +56,20 @@
 					<a  href="userfavoritegrid.html" class="grid"><i class="ion-grid "></i></a>
 				</div>
 				<div class="flex-wrap-movielist user-fav-list">
+					{% for movie in movies %}
 					<div class="movie-item-style-2">
-						<img src="images/uploads/mv1.jpg" alt="">
+						<img src="{{movie.image}}" alt="" style="height: 240px; width: 210px ;">
 						<div class="mv-item-infor">
-							<h6><a href="#">oblivion <span>(2012)</span></a></h6>
-							<p class="rate"><i class="ion-android-star"></i><span>8.1</span> /10</p>
-							<p class="describe">Earth's mightiest heroes must come together and learn to fight as a team if they are to stop the mischievous Loki and his alien army from enslaving humanity...</p>
-							<p class="run-time"> Run Time: 2h21’    .     <span>MMPA: PG-13 </span>    .     <span>Release: 1 May 2015</span></p>
-							<p>Director: <a href="#">Joss Whedon</a></p>
-							<p>Stars: <a href="#">Robert Downey Jr.,</a> <a href="#">Chris Evans,</a> <a href="#">  Chris Hemsworth</a></p>
+							<h6><a href="#">{{movie.title}}<span> ({{movie.year}})</span></a></h6>
+							<p class="rate"><i class="ion-android-star"></i><span>{{movie.rating}}</span> /10</p>
+							<p class="describe">{{movie.plot}}</p>
+							<p class="run-time"> {{movie.duration}}’    .     <span>MMPA: PG-13 </span>    .     <span>{{movie.releaseDate}}</span></p>
+							<p>Director: <a href="#">{{movie.director}}</a></p>
+							<p>Stars: <a href="#">{{crew}}.,</a> <a href="#">Chris Evans,</a> <a href="#">  Chris Hemsworth</a></p>
 						</div>
 					</div>
-					<div class="movie-item-style-2">
+					{% endfor %}
+					<<!-- div class="movie-item-style-2">
 						<img src="images/uploads/mv2.jpg" alt="">
 						<div class="mv-item-infor">
 							<h6><a href="#">into the wild <span>(2014)</span></a></h6>
@@ -110,7 +112,7 @@
 							<p>Director: <a href="#">Alan Taylor</a></p>
 							<p>Stars: <a href="#">Chris Hemsworth,  </a> <a href="#">  Natalie Portman,</a><a href="#">Tom Hiddleston</a></p>
 						</div>
-					</div>
+					</div> -->
 				</div>		
 				<div class="topbar-filter">
 					<label>Movies per page:</label>

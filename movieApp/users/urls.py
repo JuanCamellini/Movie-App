@@ -4,7 +4,8 @@ from django.contrib.auth import views as auth_views
 
 from .views import (
     profile,
-    favoritelist,
+    favoritemovies,
+    favoriteseries,
     userrate,
     userfavoritegrid,
     register
@@ -14,7 +15,7 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(template_name='users/logout.html'), name='logout'),
     path('profile/', profile, name="profile"),
     
-    path('favoritelist/', favoritelist, name="favoritelist"),
+    path('favoritemovies/', favoritemovies, name="favoritemovies"),
     path('ratedmovies/', userrate, name="userrate"),
     path('favoritegrid/', userfavoritegrid, name="userfavoritegrid"),
 

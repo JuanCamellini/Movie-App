@@ -94,7 +94,7 @@ class MovieListView(ListView):
         return Top250MoviesFilter(self.request.GET, queryset=queryset).qs
 
 
-def top250movies(request):
+""" def top250movies(request):
     if request.method == 'GET':
         url = f"https://imdb-api.com/en/API/Top250Movies/{api_key}"
         response = requests.get(url)
@@ -103,7 +103,7 @@ def top250movies(request):
             context = {
                 "movies": Top250Movies.objects.all(),
                 }
-            """
+            
                 response_json = dataset["items"]
                 # filter with the keys that wants to add to the db
                 keys_to_add = ["rank", "title", "year", "image", "crew", ]
@@ -131,8 +131,8 @@ def top250movies(request):
                     
                     movie = Movie(rank = list_dict[0], title = list_dict[1], year = list_dict[2], image = list_dict[3], crew = list_dict[4])
                     movie.save()
-                    """
-            """ #add imdbrating to the db 
+                   
+            #add imdbrating to the db 
             with transaction.atomic():
                 for movie in Movie.objects.all():
                     for item in dataset['items']:
@@ -142,14 +142,14 @@ def top250movies(request):
                             print("db updated")
                             print("========================================")
 
-             """
-            """ #cambiar los values de la columna rank de Movie para que se conviertan en tipo Integrer
+            
+            #cambiar los values de la columna rank de Movie para que se conviertan en tipo Integrer
             with transaction.atomic():
                 for movie in Movie.objects.all():
                     movie.rank = int(movie.rank)
                     movie.save()
                     print("db updated")
-                    print("========================================") """
+                    print("========================================")
 
             #agregar la lista de generos a los objectos de la db
             with transaction.atomic():
@@ -167,4 +167,4 @@ def top250movies(request):
             }
         
         return render(request, 'movies/movielist.html', context)
-    return redirect('home')
+    return redirect('home') """

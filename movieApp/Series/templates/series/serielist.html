@@ -1,0 +1,211 @@
+{% extends 'webapp/base.html' %}
+
+{% block title %}
+250 Series
+{% endblock %}
+
+{% block content %}
+
+<div class="hero common-hero">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="hero-ct">
+					<h1> serie listing - list</h1>
+					<ul class="breadcumb">
+						<li class="active"><a href="#">Home</a></li>
+						<li> <span class="ion-ios-arrow-right"></span> serie listing</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="page-single movie_list">
+	<div class="container">
+		<div class="row ipad-width2">
+			<div class="col-md-8 col-sm-12 col-xs-12">
+				<div class="topbar-filter">
+					<p>Found <span>250</span> in total</p>
+					<label>Sort by:</label>
+					<select>
+						<option value="rating">Rating Descending</option>
+						<option value="rating">Rating Ascending</option>
+						<option value="date">Release date Descending</option>
+						<option value="date">Release date Ascending</option>
+					</select>
+					<a href="serielist.html" class="list"><i class="ion-ios-list-outline active"></i></a>
+					<a  href="seriegrid.html" class="grid"><i class="ion-grid"></i></a>
+				</div>
+				{% for serie in Series %}
+				<div class="movie-item-style-2">
+					<img src="{{serie.image}}" style="height: 130px; width: 110px" alt=""> 
+					<div class="mv-item-infor">
+						<h6>{{serie.rank}}</h6>
+						<h6><a href="seriesingle.html">{{ serie.title }} <span>({{ serie.year }})</span></a></h6>
+						<p class="rate"><i class="ion-android-star"></i><span>{{serie.rating}}</span> /10</p>
+						<p>Crew: <a href="#">{{serie.crew}}</a></p>
+					</div>
+				</div>
+
+				{% endfor %}
+				<div class="topbar-filter">
+					<label>series per page:</label>
+					<select>
+						<option value="range">50 series</option>
+					</select>
+					<div class="pagination2">
+						{% if page_obj.has_previous %}
+						<a class="" style="float: left;" href="?page=1">&laquo; first</a>
+						<a href="?page= {{ page_obj.previous_page_number }}">previous</a>
+						{% endif %}
+						
+						<span class="">
+							Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }} 
+						</span>
+
+						{% if page_obj.has_next %}
+						<a href="?page= {{page_obj.next_page_number }}">next</a>
+						<a href="?page= {{page_obj.paginator.num_pages }}">last &raquo;</a>
+						{% endif %}
+
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4 col-sm-12 col-xs-12">
+				<div class="sidebar">
+					<div class="searh-form">
+						<h4 class="sb-title">Search for serie</h4>
+						<form class="form-style-1" action="{% url 'topseries' %}" method="GET">
+							<div class="row">
+								<div class="col-md-12 form-it">
+									<label>serie name</label>
+									{{ form.as_p }}
+									<input type="form" placeholder="Enter keywords">
+								</div>
+								<div class="col-md-12 form-it">
+									<label>Genres & Subgenres</label>
+									<div class="group-ip">
+										<select
+											name="skills" multiple="" class="ui fluid dropdown">
+											<option value="">Enter to filter genres</option>
+										</select>
+									</div>
+									
+								</div>
+								<div class="col-md-12 form-it">
+									<label>Rating Range</label>
+									
+									 <select>
+										<option value="range">-- Select the rating range below --</option>
+										<option value="saab">-- Select the rating range below --</option>
+										<option value="saab">-- Select the rating range below --</option>
+										<option value="saab">-- Select the rating range below --</option>
+									</select>
+									
+								</div>
+								<div class="col-md-12 form-it">
+									<label>Release Year</label>
+									<div class="row">
+										<div class="col-md-6">
+											<select>
+												<option value="range">From</option>
+												<option value="number">10</option>
+												<option value="number">20</option>
+												<option value="number">30</option>
+											</select>
+										</div>
+										<div class="col-md-6">
+											<select>
+												<option value="range">To</option>
+												<option value="number">20</option>
+												<option value="number">30</option>
+												<option value="number">40</option>
+											</select>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-12 ">
+									<input class="submit" type="submit" value="submit">
+								</div>
+							</div>
+						</form>
+					</div>
+					<div class="ads">
+						<img src="images/uploads/ads1.png" alt="">
+					</div>
+					<div class="sb-facebook sb-it">
+						<h4 class="sb-title">Find us on Facebook</h4>
+						<iframe src="#" data-src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Ftemplatespoint.net%2F%3Ffref%3Dts&tabs=timeline&width=340&height=315px&small_header=true&adapt_container_width=false&hide_cover=false&show_facepile=true&appId"  height="315" style="width:100%;border:none;overflow:hidden" ></iframe>
+					</div>
+					<div class="sb-twitter sb-it">
+						<h4 class="sb-title">Tweet to us</h4>
+						<div class="slick-tw">
+							<div class="tweet item" id=""><!-- Put your twiter id here -->
+							</div>
+							<div class="tweet item" id=""><!-- Put your 2nd twiter account id here -->
+							</div>
+						</div>							
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- footer section-->
+<footer class="ht-footer">
+	<div class="container">
+		<div class="flex-parent-ft">
+			<div class="flex-child-ft item1">
+				 <a href="index-2.html"><img class="logo" src="images/logo1.png" alt=""></a>
+				 <p>5th Avenue st, manhattan<br>
+				New York, NY 10001</p>
+				<p>Call us: <a href="#">(+01) 202 342 6789</a></p>
+			</div>
+			<div class="flex-child-ft item2">
+				<h4>Resources</h4>
+				<ul>
+					<li><a href="#">About</a></li> 
+					<li><a href="#">Blockbuster</a></li>
+					<li><a href="#">Contact Us</a></li>
+					<li><a href="#">Forums</a></li>
+					<li><a href="#">Blog</a></li>
+					<li><a href="#">Help Center</a></li>
+				</ul>
+			</div>
+			<div class="flex-child-ft item3">
+				<h4>Legal</h4>
+				<ul>
+					<li><a href="#">Terms of Use</a></li> 
+					<li><a href="#">Privacy Policy</a></li>	
+					<li><a href="#">Security</a></li>
+				</ul>
+			</div>
+			<div class="flex-child-ft item4">
+				<h4>Account</h4>
+				<ul>
+					<li><a href="#">My Account</a></li> 
+					<li><a href="#">Watchlist</a></li>	
+					<li><a href="#">Collections</a></li>
+					<li><a href="#">User Guide</a></li>
+				</ul>
+			</div>
+			<div class="flex-child-ft item5">
+				<h4>Newsletter</h4>
+				<p>Subscribe to our newsletter system now <br> to get latest news from us.</p>
+				<form action="#">
+					<input type="text" placeholder="Enter your email...">
+				</form>
+				<a href="#" class="btn">Subscribe now <i class="ion-ios-arrow-forward"></i></a>
+			</div>
+		</div>
+	</div>
+	<div class="ft-copyright">
+		<div class="ft-left">
+			<p><a target="_blank" href="https://www.templateshub.net">Templates Hub</a></p>
+		</div>
+		<div class="backtotop">
+			<p><a href="#" id="back-to-top">Back to top  <i class="ion-ios-arrow-thin-up"></i></a></p>
+		</div>
+	</div>
+{% endblock %}

@@ -68,24 +68,23 @@
 							movies<i class="fa fa-angle-down" aria-hidden="true"></i>
 							</a>
 							<ul class="dropdown-menu level1">
+								<li><a href="{% url 'topmovies' %}">Top 250 Movies List</a></li>
 								<li class="dropdown">
 									<a href="#" class="dropdown-toggle" data-toggle="dropdown" >Movie grid<i class="ion-ios-arrow-forward"></i></a>
 									<ul class="dropdown-menu level2">
 										<li><a href="moviegrid.html">Movie grid</a></li>
 										<li><a href="moviegridfw.html">movie grid full width</a></li>
 									</ul>
-								</li>			
-								<li><a href="{% url 'top250movies' %}">Movie list</a></li>
+								</li>
 								<li><a href="moviesingle.html">Movie single</a></li>
-								<li class="it-last"><a href="seriessingle.html">Series single</a></li>
 							</ul>
 						</li>
 						<li class="dropdown first">
 							<a class="btn btn-default dropdown-toggle lv1" data-toggle="dropdown" data-hover="dropdown">
-							celebrities <i class="fa fa-angle-down" aria-hidden="true"></i>
+							series <i class="fa fa-angle-down" aria-hidden="true"></i>
 							</a>
 							<ul class="dropdown-menu level1">
-								<li><a href="celebritygrid01.html">celebrity grid 01</a></li>
+								<li class="it-last"><a href="{% url 'topseries' %}">Top 250 Series List</a></li>
 								<li><a href="celebritygrid02.html">celebrity grid 02 </a></li>
 								<li><a href="celebritylist.html">celebrity list</a></li>
 								<li class="it-last"><a href="celebritysingle.html">celebrity single</a></li>

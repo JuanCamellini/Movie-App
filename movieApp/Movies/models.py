@@ -14,20 +14,19 @@ class BaseMediaModel(models.Model):
         + image - CharField
         + crew - CharField
         + rating - FloatField
-        + genre - CharField
     """
     title = models.CharField(max_length=250, null=True, unique=True)
     year = models.CharField(max_length=255,null=True)
     image = models.CharField(max_length=200, null=True)
     crew = models.CharField(max_length=200, null=True)
     rating = models.FloatField(max_length=10, null=True)
-    genre = models.CharField(max_length= 127, null=True)
     
     class Meta:
         abstract = True
         
 class Top250Movies(BaseMediaModel):
     rank = models.IntegerField(null=True)
+    genre = models.CharField(max_length= 127, null=True)
 
     def __str__(self):
         return f"{self.title} ({self.year})"
@@ -40,6 +39,7 @@ class Movies(BaseMediaModel):
     director = models.CharField(max_length=127, null=True)
     duration = models.CharField(max_length=127, null=True)
     movie_id = models.CharField(max_length=44, null=True)
+    genre = models.CharField(max_length= 127, null=True)
 
     def __str__(self):
         return f"{self.title} ({self.year})"
@@ -52,7 +52,8 @@ class MoviesLiked(models.Model):
     user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     
     def __str__(self):
-        return f"{self.movie_id.title} liked by {self.user_id.username}"
+        return f"{self.movie_id} liked by {self.user_id}"
     
     class Meta:
         verbose_name_plural = "Movies Liked"
+
