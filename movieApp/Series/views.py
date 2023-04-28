@@ -54,6 +54,30 @@ class SerieListView(ListView):
             queryset = queryset.filter(title=self.request.GET.get('title'))
         return Top250SeriesFilter(self.request.GET, queryset=queryset).qs
 
+class SerieMostPopular(ListView):
+    template_name = 'Series/series-most-popular.html'
+    context_object_name = 'series'  
+    paginate_by = 15
+    is_paginated = True
+
+    def get(self, request):
+        url = f'https://imdb-api.com/en/API/MostPopularTVs/{api_key}'
+        response = requests.get(url)
+
+        if response.status_code == 200:
+            data = response.json()
+            series = data['items']
+        else:
+            series = []
+
+        context = {
+            'series': series
+        }
+        
+        return render(request, self.template_name, context)
+    
+
+
 #function to add the 250 series into the Top250Series 
 """ def top250Series(request):
     if request.method == 'GET':

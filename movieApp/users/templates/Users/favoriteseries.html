@@ -11,7 +11,7 @@
 					<h1>{{ user.username }}’s profile</h1>
 					<ul class="breadcumb">
 						<li class="active"><a href="{% url 'home' %}">Home</a></li>
-						<li> <span class="ion-ios-arrow-right"></span>Favorite movies</li>
+						<li> <span class="ion-ios-arrow-right"></span>Favorite series</li>
 					</ul>
 				</div>
 			</div>
@@ -31,8 +31,9 @@
 						<p>Account Details</p>
 						<ul>
 							<li><a href="{% url 'profile' %}">Profile</a></li>
-							<li class="active"><a href="{% url 'favoritelist' %}">Favorite movies</a></li>
+							<li><a href="{% url 'favoritemovies' %}">Favorite movies</a></li>
 							<li><a href="{% url 'userrate' %}">Rated movies</a></li>
+							<li class="active"><a href="{% url 'favoriteseries' %}">Favorite series</a></li>
 						</ul>
 					</div>
 					<div class="user-fav">
@@ -46,7 +47,7 @@
 			</div>
 			<div class="col-md-9 col-sm-12 col-xs-12">
 				<div class="topbar-filter user">
-					<p>Found <span>1,608 movies</span> in total</p>
+					<p>Found <span>1,608 series</span> in total</p>
 					<label>Sort by:</label>
 					<select>
 						<option value="range">-- Choose option --</option>
@@ -56,20 +57,20 @@
 					<a  href="userfavoritegrid.html" class="grid"><i class="ion-grid "></i></a>
 				</div>
 				<div class="flex-wrap-movielist user-fav-list">
-					{% for movie in movies %}
+					{% for serie in series %}
 					<div class="movie-item-style-2">
-						<img src="{{movie.image}}" alt="" style="height: 240px; width: 210px ;">
+						<img src="{{serie.image}}" alt="" style="height: 240px; width: 210px ;">
 						<div class="mv-item-infor">
-							<h6><a href="#">{{movie.title}}<span> ({{movie.year}})</span></a></h6>
-							<p class="rate"><i class="ion-android-star"></i><span>{{movie.rating}}</span> /10</p>
-							<p class="describe">{{movie.plot}}</p>
-							<p class="run-time"> {{movie.duration}}’    .     <span>MMPA: PG-13 </span>    .     <span>{{movie.releaseDate}}</span></p>
-							<p>Director: <a href="#">{{movie.director}}</a></p>
+							<h6><a href="#">{{serie.title}}<span> ({{serie.year}})</span></a></h6>
+							<p class="rate"><i class="ion-android-star"></i><span>{{serie.rating}}</span> /10</p>
+							<p class="describe">{{serie.plot}}</p>
+							<p class="run-time"> {{serie.duration}}’    .     <span>MMPA: PG-13 </span>    .     <span>{{serie.releaseDate}}</span></p>
+							<p>Director: <a href="#">{{serie.director}}</a></p>
 							<p>Stars: <a href="#">Robert Downey Jr.,</a> <a href="#">Chris Evans,</a> <a href="#">  Chris Hemsworth</a></p>
 						</div>
 					</div>
 					{% endfor %}
-					<<!-- div class="movie-item-style-2">
+					<!-- div class="movie-item-style-2">
 						<img src="images/uploads/mv2.jpg" alt="">
 						<div class="mv-item-infor">
 							<h6><a href="#">into the wild <span>(2014)</span></a></h6>
@@ -115,10 +116,10 @@
 					</div> -->
 				</div>		
 				<div class="topbar-filter">
-					<label>Movies per page:</label>
+					<label>series per page:</label>
 					<select>
-						<option value="range">5 Movies</option>
-						<option value="saab">10 Movies</option>
+						<option value="range">5 series</option>
+						<option value="saab">10 series</option>
 					</select>
 					
 					<div class="pagination2">

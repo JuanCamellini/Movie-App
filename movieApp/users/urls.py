@@ -4,10 +4,10 @@ from django.contrib.auth import views as auth_views
 
 from .views import (
     profile,
-    favoritemovies,
-    favoriteseries,
-    userrate,
-    userfavoritegrid,
+    FavoriteSeries,
+    favoriteMovies,
+    userRate,
+    userFavoriteGrid,
     register
     )
 
@@ -15,9 +15,10 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(template_name='users/logout.html'), name='logout'),
     path('profile/', profile, name="profile"),
     
-    path('favoritemovies/', favoritemovies, name="favoritemovies"),
-    path('ratedmovies/', userrate, name="userrate"),
-    path('favoritegrid/', userfavoritegrid, name="userfavoritegrid"),
+    path('favorite-movies/', favoriteMovies, name="favoritemovies"),
+    path('favorite-series/', FavoriteSeries.as_view(), name="favoriteseries"),
+    path('rated-movies/', userRate, name="userrate"),
+    path('favorite-grid/', userFavoriteGrid, name="userfavoritegrid"),
 
     path('password-reset/', auth_views.PasswordResetView.as_view(template_name='webApp/password-reset.html'), name='password_reset'),
     path('password-reset/done/', auth_views.PasswordResetDoneView.as_view(template_name='webApp/password-reset-done.html'), name='password_reset_done'),

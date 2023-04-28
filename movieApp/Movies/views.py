@@ -22,7 +22,7 @@ from .forms import MoviesFilterForm
 
 class MovieListView(ListView):
     model = Top250Movies
-    template_name = 'Movies/movielist.html'
+    template_name = 'Movies/movies-top-250.html'
     context_object_name = 'movies'
     paginate_by = 50 
     is_paginated = True
@@ -35,11 +35,6 @@ class MovieListView(ListView):
                 url = f"https://imdb-api.com/en/API/AdvancedSearch/{api_key}/?title={movie}"
             response = requests.get(url)
             dataset = response.json()     
-        """ movie_list = Movie.objects.all()
-        # Set up Paginator
-        p = Paginator(Movie.objects.all(), 50)
-        page = request.GET.get('page')
-        movies = p.get_page(page) """
         try:        
             context = {
                 ### 
@@ -73,18 +68,11 @@ class MovieListView(ListView):
             context = { 
                 "error": "Movie not found"
                 }
-        return render(request, 'Movies/movielist.html', context)
+        return render(request, self.template_name, context)
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        #como hacer un fiter objects.filter(rank__isnull=False) sin alterar el paginate_by
-        """ context['movies'] = Movie.objects.filter(rank__isnull=False)
-        p = Paginator(Movie.objects.filter(rank__isnull=False), 50)
-        page = self.request.GET.get('page')
-        context['movies'] = p.get_page(page) """
-        
+        context = super().get_context_data(**kwargs)       
         context['object_list'] = Top250Movies.objects.filter(rank__isnull=False)
-        
         return context
 
     def get_queryset(self):
@@ -92,7 +80,60 @@ class MovieListView(ListView):
         if self.request.GET.get('title'):
             queryset = queryset.filter(title=self.request.GET.get('title'))
         return Top250MoviesFilter(self.request.GET, queryset=queryset).qs
+    
 
+class MovieMostPopular(ListView):
+    template_name = 'Movies/movies-most-popular.html'
+    context_object_name = 'movies'  
+    paginate_by = 15
+    is_paginated = True
+
+    def get(self, request):
+        url = f'https://imdb-api.com/en/API/MostPopularMovies/{api_key}'
+        response = requests.get(url)
+
+        if response.status_code == 200:
+            data = response.json()
+            movies = data['items']
+        else:
+            movies = []
+
+        context = {
+            'movies': movies
+        }
+        
+        return render(request, self.template_name, context)
+    
+def inTheater(request):
+    if request.method == "GET":
+        url = f"https://imdb-api.com/en/API/InTheaters/{api_key}"
+        response = requests.get(url)
+        dataset = response.json()
+        try:
+            context = {
+                "movies": dataset["items"],
+            }
+        except:
+            context = {
+                "error": "Movie not found"
+            }
+        return render(request, 'Movies/movie-theater.html', context)
+    
+def comingSoon(request):
+    if request.method == "GET":
+        url = f"https://imdb-api.com/en/API/ComingSoon/{api_key}"
+        response = requests.get(url)
+        dataset = response.json()
+        try:
+            context = {
+                "movies": dataset["items"],
+            }
+        except:
+            context = {
+                "error": "Movie not found"
+            }
+        return render(request, 'Movies/movie-coming-soon.html', context)
+    
 
 """ def top250movies(request):
     if request.method == 'GET':

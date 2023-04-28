@@ -81,6 +81,15 @@ def index(request):
     return render(request, 'webApp/index.html', {'form': form})
 
 #Functions for the results view
+def movie_or_serie_in_database(movie_title):
+    """ Check if movie or serie is in the database """
+    if Movies.objects.filter(title__icontains=movie_title).exists():
+        return True
+    elif Series.objects.filter(title__icontains=movie_title).exists():
+        return False
+    else:
+        return None
+
 def clean_movie_title(title):
     """Clean and validate the movie title."""
     return title.lower().replace(" ", "%20")
@@ -127,83 +136,95 @@ def movie_or_serie(contentRating):
 def results(request):
     if request.method == 'POST':
         movie_title = clean_movie_title(request.POST['movie'])
-        try:
-            data = fetch_movie_data(movie_title)['results'][0]
-        except (requests.RequestException, IndexError):
-            return render(request, 'webApp/404.html')
-        context = {
-            "movie_id": data['id'],
-            "image": data['image'],
-            "title": data['title'],
-            "year": data['description'].replace("(", "").replace(")",""),
-            "duration": data['runtimeStr'],
-            "genre": data['genres'],
-            "rating": data['imDbRating'],
-            "plot": data['plot'],
-            "crew": data['stars'],
-            "director": data['starList'][0]['name'],
-            "contentRating": data["contentRating"],
-        }
-        try:
-            details = fetch_movie_details(context['movie_id'])
-            context["releaseDate"] = details["releaseDate"]
-            context["awards"] = details["awards"]
-            context["writers"] = details["writers"]
-            context["keywordList"] = details["keywordList"]
-
-            details = fetch_movie_trailer(context['movie_id'])
-            context["trailer"] = details["link"]
-        except requests.RequestException:
-            pass
-
-        if movie_or_serie(context["contentRating"]):
-            context["rating"] = float(context["rating"])                 
-            keys_to_add = ["movie_id", "image", "title", "year", "duration", "genre", "rating", "plot", "crew", "director"]
-            context_db = {key: value for key, value in context.items() if key in keys_to_add}
-            print(context_db)
-            if validate_movie_data(context_db):
-                movie_instance, created = Movies.objects.get_or_create(
-                    title=context['title'],  
-                    movie_id=context['movie_id'],
-                    image=context['image'],
-                    year=context['year'],
-                    duration=context['duration'],
-                    genre=context['genre'],
-                    rating=context['rating'],
-                    plot=context['plot'],
-                    crew=context['crew'],
-                    director=context['director']
-                        )
-                if created:
-                    movie_instance.save()
-                print("=========================================")
-                print(movie_instance)
-                return render(request, 'webapp/moviesingle.html', context)
+        # if the movie or serie is in the database take the data from there
+        if movie_or_serie_in_database(movie_title):
+            movie = Movies.objects.get(title__icontains=movie_title)
+            return render(request, 'Movies/movies-detail.html', {'movie':movie})
+        elif movie_or_serie_in_database(movie_title) == False:
+            serie = Series.objects.get(title=movie_title)
+            return render(request, 'Series/series-detail.html', {'serie':serie} )
         else:
-            context["rating"] = float(context["rating"])                 
-            keys_to_add = ["movie_id", "image", "title", "year", "duration", "genre", "rating", "plot", "crew", "director"]
-            context_db = {key: value for key, value in context.items() if key in keys_to_add}
-            print(context_db)
-            if validate_movie_data(context_db):
-                serie_instance, created = Series.objects.get_or_create(
-                    title=context['title'],  
-                    series_id=context['movie_id'],
-                    image=context['image'],
-                    year=context['year'],
-                    duration=context['duration'],
-                    genre=context['genre'],
-                    rating=context['rating'],
-                    plot=context['plot'],
-                    crew=context['crew'],
-                    director=context['director']
-                        )
-                if created:
-                    serie_instance.save()
-                print("=========================================")
-                print(serie_instance)
-                return render(request, 'webapp/seriessingle.html', context)
+            try:
+                data = fetch_movie_data(movie_title)['results'][0]
+            except (requests.RequestException, IndexError):
+                return render(request, 'webApp/404.html')
+            context = {
+                "movie_id": data['id'],
+                "image": data['image'],
+                "title": data['title'],
+                "year": data['description'].replace("(", "").replace(")",""),
+                "duration": data['runtimeStr'],
+                "genre": data['genres'],
+                "rating": data['imDbRating'],
+                "plot": data['plot'],
+                "crew": data['stars'],
+                "director": data['starList'][0]['name'],
+                "contentRating": data["contentRating"],
+            }
+            try:
+                #add keys to the context but not in the table
+                details = fetch_movie_details(context['movie_id'])
+                context["releaseDate"] = details["releaseDate"]
+                context["awards"] = details["awards"]
+                context["writers"] = details["writers"]
+                context["keywordList"] = details["keywordList"]
+
+                details = fetch_movie_trailer(context['movie_id'])
+                context["trailer"] = details["link"]
+            except requests.RequestException:
+                pass
+
+            if movie_or_serie(context["contentRating"]):
+                #for movies
+                context["rating"] = float(context["rating"])                 
+                keys_to_add = ["movie_id", "image", "title", "year", "duration", "genre", "rating", "plot", "crew", "director"]
+                context_db = {key: value for key, value in context.items() if key in keys_to_add}
+                print(context_db)
+                if validate_movie_data(context_db):
+                    movie_instance, created = Movies.objects.get_or_create(
+                        title=context['title'],  
+                        movie_id=context['movie_id'],
+                        image=context['image'],
+                        year=context['year'],
+                        duration=context['duration'],
+                        genre=context['genre'],
+                        rating=context['rating'],
+                        plot=context['plot'],
+                        crew=context['crew'],
+                        director=context['director']
+                            )
+                    if created:
+                        movie_instance.save()
+                    print("=========================================")
+                    print(movie_instance)
+                    return render(request, 'webapp/moviesingle.html', context)
             else:
-                return render(request, 'webapp/404.html')
+                #for series
+                context["rating"] = float(context["rating"])                 
+                keys_to_add = ["movie_id", "image", "title", "year", "duration", "genre", "rating", "plot", "crew", "director"]
+                context_db = {key: value for key, value in context.items() if key in keys_to_add}
+                print(context_db)
+                if validate_movie_data(context_db):
+                    serie_instance, created = Series.objects.get_or_create(
+                        title=context['title'],  
+                        series_id=context['movie_id'],
+                        image=context['image'],
+                        year=context['year'],
+                        duration=context['duration'],
+                        genre=context['genre'],
+                        rating=context['rating'],
+                        plot=context['plot'],
+                        crew=context['crew'],
+                        director=context['director']
+                            )
+                    if created:
+                        serie_instance.save()
+                    print("=========================================")
+                    print(serie_instance)
+                    return render(request, 'webapp/seriessingle.html', context)
+                #if the data is not validated return 404
+                else:
+                    return render(request, 'webapp/404.html')
     else:
         return redirect('home')
     

@@ -4,7 +4,7 @@ from django.contrib import admin
 # Models
 from .models import Series, Top250Series, SeriesLiked
 
-# Top250Movies Admin
+# Top250series Admin
 class Top250SeriesAdmin(admin.ModelAdmin):
     fields = ["title", "year", "crew", "rank", "image", "rating", "ratingCount"]
     list_display = ("title", "rank", "year", "rating")
@@ -19,7 +19,7 @@ class Top250SeriesAdmin(admin.ModelAdmin):
 
 admin.site.register(Top250Series, Top250SeriesAdmin)
 
-# Movies Admin
+# series Admin
 class SeriesAdmin(admin.ModelAdmin):
     fields = ["title", "year", "crew", "image", "rating"]
     list_display = ("title", "year", "rating")
@@ -30,9 +30,9 @@ admin.site.register(Series, SeriesAdmin)
 
 # SeriesLiked Admin
 class SeriesLikedAdmin(admin.ModelAdmin):
-    fields = ["movie_id", "user_id"]
-    list_display = ("movie_id", "user_id")
-    list_filter = ("movie_id", "user_id")
-    search_fields = ["movie_id", "user_id"]
+    fields = ["serie_id", "user_id"]
+    list_display = ("serie_id", "user_id")
+    list_filter = ("serie_id", "user_id")
+    search_fields = ["serie_id", "user_id"]
 
 admin.site.register(SeriesLiked, SeriesLikedAdmin)

@@ -24,15 +24,16 @@
 			<div class="col-md-3 col-sm-12 col-xs-12">
 				<div class="user-information">
 					<div class="user-img">
-						<a href="#"><img src="images/uploads/user-img.png" alt=""><br></a>
+						<a href="#"><img src="{% static 'webapp/images/uploads/user-img.png' %}" alt=""><br></a>
 						<a href="#" class="redbtn">Change avatar</a>
 					</div>
 					<div class="user-fav">
 						<p>Account Details</p>
 						<ul>
 							<li><a href="{% url 'profile' %}">Profile</a></li>
-							<li class="active"><a href="{% url 'favoritelist' %}">Favorite movies</a></li>
+							<li class="active"><a href="{% url 'favoritemovies' %}">Favorite movies</a></li>
 							<li><a href="{% url 'userrate' %}">Rated movies</a></li>
+							<li><a href="{% url 'favoriteseries' %}">Favorite series</a></li>
 						</ul>
 					</div>
 					<div class="user-fav">
@@ -69,7 +70,7 @@
 						</div>
 					</div>
 					{% endfor %}
-					<<!-- div class="movie-item-style-2">
+					<!-- div class="movie-item-style-2">
 						<img src="images/uploads/mv2.jpg" alt="">
 						<div class="mv-item-infor">
 							<h6><a href="#">into the wild <span>(2014)</span></a></h6>

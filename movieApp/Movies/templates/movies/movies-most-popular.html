@@ -1,7 +1,7 @@
 {% extends 'webapp/base.html' %}
 
 {% block title %}
-{{ Movies.title }}
+Most Popular Movies
 {% endblock %}
 
 {% block content %}
@@ -11,9 +11,9 @@
 		<div class="row">
 			<div class="col-md-12">
 				<div class="hero-ct">
-					<h1> movie listing - list</h1>
+					<h1> movies most popular - list</h1>
 					<ul class="breadcumb">
-						<li class="active"><a href="#">Home</a></li>
+						<li class="active"><a href="{% url 'home' %}">Home</a></li>
 						<li> <span class="ion-ios-arrow-right"></span> movie listing</li>
 					</ul>
 				</div>
@@ -26,7 +26,7 @@
 		<div class="row ipad-width2">
 			<div class="col-md-8 col-sm-12 col-xs-12">
 				<div class="topbar-filter">
-					<p>Found <span>250</span> in total</p>
+					<p>Found <span>99</span> in total</p>
 					<label>Sort by:</label>
 					<select>
 						<option value="rating">Rating Descending</option>
@@ -43,9 +43,10 @@
 				<div class="movie-item-style-2">
 					<img src="{{movie.image}}" style="height: 130px; width: 110px" alt=""> 
 					<div class="mv-item-infor">
-						<h6>{{movie.rank}}</h6>
-						<h6><a href="moviesingle.html">{{ movie.title }} <span>({{ movie.year }})</span></a></h6>
-						<p class="rate"><i class="ion-android-star"></i><span>{{movie.rating}}</span> /10</p>
+						<h6>{{movie.rank}}     <small><span style="color: rgb(15, 129, 129);">{{movie.rankUpDown}}</span></small></h6>
+						<h6><a href="moviesingle.html">{{ movie.title }} <span>({{ movie.year }})</span></a></h6> 
+						<p class="rate"><i class="ion-android-star"></i><span>{{movie.imDbRating}}</span> /10   -  Votes: <small>{{movie.imDbRatingCount}}</small></p>
+						<p></p>
 						<p>Crew: <a href="#">{{movie.crew}}</a></p>
 					</div>
 				</div>
@@ -54,7 +55,7 @@
 				<div class="topbar-filter">
 					<label>Movies per page:</label>
 					<select>
-						<option value="range">50 Movies</option>
+						<option value="range">100 Movies</option>
 					</select>
 					<div class="pagination2">
 						{% if page_obj.has_previous %}

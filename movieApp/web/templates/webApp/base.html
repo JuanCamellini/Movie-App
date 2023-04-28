@@ -58,7 +58,7 @@
 							<a href="#page-top"></a>
 						</li>
 						<li class="dropdown first">
-							<a class="btn btn-default dropdown-toggle lv1" data-toggle="dropdown">
+							<a class="btn btn-default dropdown-toggle lv1" href="{% url 'home' %}" >
 							Home 
 							</a>
 							
@@ -69,10 +69,10 @@
 							</a>
 							<ul class="dropdown-menu level1">
 								<li><a href="{% url 'topmovies' %}">Top 250 Movies List</a></li>
+								<li><a href="{% url 'mostpopularmovies' %}">most popular movies</a></li>
 								<li class="dropdown">
 									<a href="#" class="dropdown-toggle" data-toggle="dropdown" >Movie grid<i class="ion-ios-arrow-forward"></i></a>
 									<ul class="dropdown-menu level2">
-										<li><a href="moviegrid.html">Movie grid</a></li>
 										<li><a href="moviegridfw.html">movie grid full width</a></li>
 									</ul>
 								</li>
@@ -85,8 +85,8 @@
 							</a>
 							<ul class="dropdown-menu level1">
 								<li class="it-last"><a href="{% url 'topseries' %}">Top 250 Series List</a></li>
+								<li><a href="{% url 'mostpopularseries' %}">most popular series</a></li>
 								<li><a href="celebritygrid02.html">celebrity grid 02 </a></li>
-								<li><a href="celebritylist.html">celebrity list</a></li>
 								<li class="it-last"><a href="celebritysingle.html">celebrity single</a></li>
 							</ul>
 						</li>
@@ -95,9 +95,8 @@
 							news <i class="fa fa-angle-down" aria-hidden="true"></i>
 							</a>
 							<ul class="dropdown-menu level1">
-								<li><a href="bloglist.html">blog List</a></li>
-								<li><a href="bloggrid.html">blog Grid</a></li>
-								<li class="it-last"><a href="blogdetail.html">blog Detail</a></li>
+								<li><a href="{% url 'comingsoon' %}">coming soon</a></li>
+								<li><a href="{% url 'intheaters' %}">in theaters</a></li>
 							</ul>
 						</li>
 						<li class="dropdown first">
@@ -105,10 +104,7 @@
 							community <i class="fa fa-angle-down" aria-hidden="true"></i>
 							</a>
 							<ul class="dropdown-menu level1">
-								<li><a href="userfavoritegrid.html">user favorite grid</a></li>
-								<li><a href="userfavoritelist.html">user favorite list</a></li>
-								<li><a href="{% url 'profile' %}">user profile</a></li>
-								<li class="it-last"><a href="userrate.html">user rate</a></li>
+								<li><a href="userfavoritelist.html">community</a></li>
 							</ul>
 						</li>
 					</ul>
