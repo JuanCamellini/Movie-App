@@ -132,6 +132,14 @@ def movie_or_serie(contentRating):
     else:
         return False
 
+def director_exist(data):
+    """Validate the data returned from the IMDb API."""
+    if data['starList'] == None:
+        return False
+    elif data['plot'] == None:
+        return False
+    else:
+        return True
 # crear funcion q si el titulo se encuentra en la db q no realice el pedido api 
 def results(request):
     if request.method == 'POST':
@@ -148,6 +156,11 @@ def results(request):
                 data = fetch_movie_data(movie_title)['results'][0]
             except (requests.RequestException, IndexError):
                 return render(request, 'webApp/404.html')
+            # filter movies or series that not have the items required
+            """ change the 404 error for other template to say the movie is not found. """
+            if director_exist(data) == False:
+                return render(request, 'webApp/404.html')
+                
             context = {
                 "movie_id": data['id'],
                 "image": data['image'],
@@ -161,6 +174,8 @@ def results(request):
                 "director": data['starList'][0]['name'],
                 "contentRating": data["contentRating"],
             }
+            print(context)
+            
             try:
                 #add keys to the context but not in the table
                 details = fetch_movie_details(context['movie_id'])
@@ -200,7 +215,8 @@ def results(request):
                     return render(request, 'webapp/moviesingle.html', context)
             else:
                 #for series
-                context["rating"] = float(context["rating"])                 
+                context["rating"] = float(context["rating"])
+                print(context)                 
                 keys_to_add = ["movie_id", "image", "title", "year", "duration", "genre", "rating", "plot", "crew", "director"]
                 context_db = {key: value for key, value in context.items() if key in keys_to_add}
                 print(context_db)

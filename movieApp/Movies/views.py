@@ -77,17 +77,40 @@ class MovieListView(ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
+        option = self.request.GET.get('option')
+        order = self.request.GET.get('order', 'asc')
+
+        if option == 'rating':
+            if order == 'asc':
+                queryset = queryset.order_by('-rating')
+            elif order == 'desc':
+                queryset = queryset.order_by('rating')
+        elif option == 'release_date':
+            if order == 'asc':
+                queryset = queryset.order_by('year')
+            elif order == 'desc':
+                queryset = queryset.order_by('-year')
+
+        """ if year_order == 'asc':
+            queryset = queryset.order_by('year')
+        elif year_order == 'desc':
+            queryset = queryset.order_by('-year') """
+        
+        return queryset
+        
         if self.request.GET.get('title'):
             queryset = queryset.filter(title=self.request.GET.get('title'))
         return Top250MoviesFilter(self.request.GET, queryset=queryset).qs
-    
+  
+
+        
 
 class MovieMostPopular(ListView):
     template_name = 'Movies/movies-most-popular.html'
     context_object_name = 'movies'  
     paginate_by = 15
     is_paginated = True
-
+    
     def get(self, request):
         url = f'https://imdb-api.com/en/API/MostPopularMovies/{api_key}'
         response = requests.get(url)
@@ -98,12 +121,13 @@ class MovieMostPopular(ListView):
         else:
             movies = []
 
+        #filter contextmovies from ascending rating 
         context = {
             'movies': movies
         }
-        
-        return render(request, self.template_name, context)
+        return render(request, self.template_name, context) 
     
+
 def inTheater(request):
     if request.method == "GET":
         url = f"https://imdb-api.com/en/API/InTheaters/{api_key}"

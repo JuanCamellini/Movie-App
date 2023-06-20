@@ -32,15 +32,15 @@
 							<div><a href="{{trailer}}" class="item item-2 redbtn fancybox-media hvr-grow"><i class="ion-play"></i></a></div>
 						</div>
 						<div class="btn-transform transform-vertical">
-							<div><a href="#" class="item item-1 yellowbtn"> <i class="ion-star"></i> Add to Favorites</a></div>
-							<div><a href="#" class="item item-2 yellowbtn"><i class="ion-star"></i></a></div>
+							<div><a href="{% url 'add_to_favorites' movie.title %}" class="item item-1 yellowbtn"> <i class="ion-star"></i> Add to Favorites</a></div>
+							<div><a href="{% url 'add_to_favorites' movie.title %}" class="item item-2 yellowbtn"><i class="ion-star"></i></a></div>
 						</div>
 					</div> 
 				</div>
 			</div>
 			<div class="col-md-8 col-sm-12 col-xs-12">
 				<div class="movie-single-ct main-content">
-					<h1 class="bd-hd">{{ title }} <span>{{ year }}</span></h1>
+					<h1 class="bd-hd">{{ title }} <span>{{ movie.year }}</span></h1>
 					<div class="social-btn">
 						<form action="" method="POST">{% csrf_token %}
 							<input type="hidden" name="movie_id" value="">

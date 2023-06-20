@@ -27,14 +27,33 @@
 			<div class="col-md-8 col-sm-12 col-xs-12">
 				<div class="topbar-filter">
 					<p>Found <span>250</span> in total</p>
-					<label>Sort by:</label>
+					<!-- <label>Sort by:</label>
 					<select>
 						<option value="rating">Rating Descending</option>
 						<option value="rating">Rating Ascending</option>
 						<option value="date">Release date Descending</option>
 						<option value="date">Release date Ascending</option>
-					</select>
-					<a href="movielist.html" class="list"><i class="ion-ios-list-outline active"></i></a>
+					</select> -->
+					<form method="GET" action="{% url 'topmovies' %}" style="display: block;">					
+						<label for="lister-sort-by-options">sort by:</label>
+						<select name="option" id="option">
+							<option value="rating">Ranking</option>
+							<option value="release_date">Release date</option>
+						</select>
+						<span data-sort="asc" style="display: inline;">
+							<a href="?option={{ request.GET.option }}&order=asc" title="Ascending order"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-arrow-up-short" viewBox="0 0 16 16">
+								<path fill-rule="evenodd" d="M8 12a.5.5 0 0 0 .5-.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 .5.5z"/>
+							  </svg></a>
+						</span>
+						<span data-sort="desc" style="display: inline; width: 100px">
+							<a href="?option={{ request.GET.option }}&order=desc" title="Descending order"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-arrow-down-short" viewBox="0 0 16 16">
+								<path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4z"/>
+							  </svg></a>
+						</span>
+						<!-- <span data-sort="ir:asc" title="Ascending-order"> -->
+						<button class="submit" type="submit" style="display: inline;">Filter</button>
+					</form>
+					<a href="movielist.html" class="list"></a>
 					<a  href="moviegrid.html" class="grid"><i class="ion-grid"></i></a>
 				</div>
 				{% for movie in movies %}
